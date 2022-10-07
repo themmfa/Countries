@@ -12,7 +12,6 @@ struct HomeView: View {
 
     init() {
         UITabBar.appearance().backgroundColor = UIColor.gray
-        UITabBar.appearance().barTintColor = UIColor.white
     }
 
     var body: some View {
@@ -21,10 +20,8 @@ struct HomeView: View {
                 .tabItem {
                     Label {
                         Text("Home")
-                            .foregroundColor(.white)
                     } icon: {
                         Image(systemName: "house.fill")
-                            .foregroundColor(.white)
                     }
                 }
 
@@ -72,21 +69,23 @@ struct CountryBarView: View {
     var country: Countries
 
     var body: some View {
-        ZStack {
-            Rectangle()
-                .foregroundColor(Color.gray)
-                .cornerRadius(12)
-            HStack {
-                Text(country.name)
+        HStack {
+            Text(country.name)
+                .foregroundColor(.white)
+            Spacer()
+            Button(action: {}) {
+                Image(systemName: "star.fill")
                     .foregroundColor(.white)
-                Spacer()
-                Button(action: {}) {
-                    Image(systemName: "star.fill")
-                        .foregroundColor(.white)
-                        .scaledToFit()
-                }
+                    .scaledToFit()
             }
-            .padding()
+        }
+        .padding()
+
+        .background(.gray)
+        .cornerRadius(12)
+        .overlay {
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(.black, lineWidth: 2)
         }
         .padding(.horizontal, 20)
     }
