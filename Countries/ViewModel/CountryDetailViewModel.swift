@@ -1,5 +1,5 @@
 //
-//  HomeViewModel.swift
+//  CountryDetailViewModel.swift
 //  Countries
 //
 //  Created by Fatih Erdoğan on 7.10.2022.
@@ -7,16 +7,21 @@
 
 import Foundation
 
-class HomeViewModel: ObservableObject {
-    @Published var countryList: [Countries] = []
+class CountryDetailViewModel: ObservableObject {
+    @Published var countryDetail: CountryDetailModel?
+    var code: String
 
-    func getCountries() {
+    init(code: String) {
+        self.code = code
+    }
+
+    func getCountryDetail() {
         let headers = [
             "X-RapidAPI-Key": apiKey,
             "X-RapidAPI-Host": "wft-geo-db.p.rapidapi.com"
         ]
 
-        var request = URLRequest(url: URL(string: "https://wft-geo-db.p.rapidapi.com/v1/geo/countries?limit=10")!,
+        var request = URLRequest(url: URL(string: "https://wft-geo-db.p.rapidapi.com/v1/geo/countries/\(code)")!,
                                  cachePolicy: .useProtocolCachePolicy,
                                  timeoutInterval: 10.0)
 
@@ -30,9 +35,12 @@ class HomeViewModel: ObservableObject {
             } else {
                 do {
                     if let safeData = data {
-                        let decodedData = try JSONDecoder().decode(CountryListData.self, from: safeData)
+                        print(safeData.base64EncodedString())
+                        let decodedData = try JSONDecoder().decode(CDetail.self, from: safeData)
+                        print(decodedData)
+
                         DispatchQueue.main.async {
-                            self?.countryList = decodedData.data
+                            self?.countryDetail = CountryDetailModel(code: decodedData.data.code, flagImageUri: decodedData.data.flagImageUri, name: decodedData.data.name, wikiDataId: decodedData.data.wikiDataId)
                         }
                     }
                 } catch {

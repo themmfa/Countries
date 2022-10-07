@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - Country Data
 
-struct CountryData: Codable {
+struct CountryListData: Codable {
     let data: [Countries]
 }
 
@@ -17,6 +17,7 @@ struct CountryData: Codable {
 
 struct Countries: Codable {
     let id = UUID()
+    var isFavorite: Bool = false
     let code: String
     let currencyCodes: [String]
     let name, wikiDataID: String

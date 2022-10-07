@@ -8,15 +8,14 @@
 import SwiftUI
 
 struct HomeView: View {
-    @StateObject var homeViewModel = HomeViewModel()
-
     init() {
         UITabBar.appearance().backgroundColor = UIColor.gray
+        UITabBar.appearance().unselectedItemTintColor = UIColor.white
     }
 
     var body: some View {
         TabView {
-            CountriesView(countries: homeViewModel.countryList, onAppear: homeViewModel.getCountries)
+            CountriesView()
                 .tabItem {
                     Label {
                         Text("Home")
@@ -24,34 +23,19 @@ struct HomeView: View {
                         Image(systemName: "house.fill")
                     }
                 }
-
-            VStack {
-                ForEach(homeViewModel.countryList, id: \.id) { country in
-                    CountryBarView(country: country)
-                }
-            }
-            .tabItem {
-                Label {
-                    Text("Saved")
-                        .foregroundColor(.white)
-                } icon: {
-                    Image(systemName: "heart.fill")
-                        .foregroundColor(.white)
-                }
-            }
         }
     }
 }
 
 struct CountriesView: View {
-    var countries: [Countries]
-    var onAppear: () -> Void
+    @EnvironmentObject var homeViewModel: HomeViewModel
+
     var body: some View {
         NavigationView {
             ScrollView {
                 VStack {
-                    ForEach(countries, id: \.id) { country in
-                        NavigationLink(destination: Text(country.name)) {
+                    ForEach(homeViewModel.countryList, id: \.id) { country in
+                        NavigationLink(destination: CountryDetailView(countryDetailViewModel: CountryDetailViewModel(code: country.code))) {
                             CountryBarView(country: country)
                         }
                     }
@@ -60,10 +44,12 @@ struct CountriesView: View {
             .navigationTitle("Countries")
         }
         .onAppear {
-            onAppear()
+            homeViewModel.getCountries()
         }
     }
 }
+
+
 
 struct CountryBarView: View {
     var country: Countries

@@ -9,9 +9,10 @@ import SwiftUI
 
 @main
 struct CountriesApp: App {
+    @StateObject var homeViewModel = HomeViewModel()
     var body: some Scene {
         WindowGroup {
-            HomeView()
+            HomeView().environmentObject(homeViewModel)
         }
     }
 }
