@@ -10,9 +10,12 @@ import SwiftUI
 @main
 struct CountriesApp: App {
     @StateObject var homeViewModel = HomeViewModel()
+    @StateObject var dataController = DataController()
     var body: some Scene {
         WindowGroup {
-            HomeView().environmentObject(homeViewModel)
+            HomeView()
+                .environmentObject(homeViewModel)
+                .environment(\.managedObjectContext, dataController.container.viewContext)
         }
     }
 }

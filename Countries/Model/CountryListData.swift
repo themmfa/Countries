@@ -17,7 +17,6 @@ struct CountryListData: Codable {
 
 struct Countries: Codable {
     let id = UUID()
-    var isFavorite: Bool = false
     let code: String
     let currencyCodes: [String]
     let name, wikiDataID: String

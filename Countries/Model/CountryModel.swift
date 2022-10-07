@@ -7,9 +7,11 @@
 
 import Foundation
 
-struct CountryDetailModel {
+struct CountryModel {
+    let id = UUID()
     let code: String
-    let flagImageUri: String
+    var flagImageUri: String?
     let name: String
     let wikiDataId: String
+    var isFaved: Bool = false
 }

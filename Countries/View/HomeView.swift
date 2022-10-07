@@ -23,7 +23,21 @@ struct HomeView: View {
                         Image(systemName: "house.fill")
                     }
                 }
+            SavedCountriesView()
+                .tabItem {
+                    Label {
+                        Text("Saved")
+                    } icon: {
+                        Image(systemName: "heart.fill")
+                    }
+                }
         }
+    }
+}
+
+struct SavedCountriesView: View {
+    var body: some View {
+        VStack {}
     }
 }
 
@@ -35,7 +49,7 @@ struct CountriesView: View {
             ScrollView {
                 VStack {
                     ForEach(homeViewModel.countryList, id: \.id) { country in
-                        NavigationLink(destination: CountryDetailView(countryDetailViewModel: CountryDetailViewModel(code: country.code))) {
+                        NavigationLink(destination: CountryDetailView(countryModel: country)) {
                             CountryBarView(country: country)
                         }
                     }
@@ -49,19 +63,19 @@ struct CountriesView: View {
     }
 }
 
-
-
 struct CountryBarView: View {
-    var country: Countries
+    @State var country: CountryModel
 
     var body: some View {
         HStack {
             Text(country.name)
                 .foregroundColor(.white)
             Spacer()
-            Button(action: {}) {
+            Button(action: {
+                country.isFaved = !country.isFaved
+            }) {
                 Image(systemName: "star.fill")
-                    .foregroundColor(.white)
+                    .foregroundColor(country.isFaved ? .black : .white)
                     .scaledToFit()
             }
         }
