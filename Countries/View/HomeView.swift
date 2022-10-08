@@ -13,6 +13,7 @@ struct HomeView: View {
     init() {
         UITabBar.appearance().backgroundColor = UIColor.gray
         UITabBar.appearance().unselectedItemTintColor = UIColor.white
+        UITabBar.appearance().barTintColor = UIColor(Color.black)
     }
 
     var body: some View {
@@ -38,6 +39,7 @@ struct HomeView: View {
                     }
                 }
         }
+        .accentColor(.black)
     }
 }
 
@@ -77,7 +79,8 @@ struct SavedCountriesView: View {
                     Spacer()
                 }
             }
-        }.navigationTitle("Saved Countries")
+        }
+        .navigationTitle("Saved Countries")
     }
 }
 
@@ -93,7 +96,7 @@ struct CountryBarView: View {
     var body: some View {
         HStack {
             Text(country.name)
-                .foregroundColor(.white)
+                .foregroundColor(.white).font(.system(.title))
             Spacer()
             Button(action: {
                 let countryIndex = getIndex()
