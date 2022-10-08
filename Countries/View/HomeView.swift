@@ -96,9 +96,9 @@ struct CountryBarView: View {
                 .foregroundColor(.white)
             Spacer()
             Button(action: {
-                if let index = homeViewModel.countryList.firstIndex(where: { $0.id == country.id }) {
-                    homeViewModel.countryList[index].isFaved = !homeViewModel.countryList[index].isFaved
-                }
+                let countryIndex = getIndex()
+                homeViewModel.countryList[countryIndex].isFaved = !homeViewModel.countryList[countryIndex].isFaved
+
             }) {
                 Image(systemName: "star.fill")
                     .foregroundColor(homeViewModel.countryList[getIndex()].isFaved ? .black : .white)
