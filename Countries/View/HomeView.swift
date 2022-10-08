@@ -82,9 +82,13 @@ struct SavedCountriesView: View {
 }
 
 struct CountryBarView: View {
-    @State var country: CountryModel
+    var country: CountryModel
     @ObservedObject var homeViewModel: HomeViewModel
-    @State var countryIndex: Int = 0
+
+    func getIndex() -> Int {
+        let index = homeViewModel.countryList.firstIndex(where: { $0.id == country.id })!
+        return index
+    }
 
     var body: some View {
         HStack {
@@ -94,11 +98,10 @@ struct CountryBarView: View {
             Button(action: {
                 if let index = homeViewModel.countryList.firstIndex(where: { $0.id == country.id }) {
                     homeViewModel.countryList[index].isFaved = !homeViewModel.countryList[index].isFaved
-                    countryIndex = index
                 }
             }) {
                 Image(systemName: "star.fill")
-                    .foregroundColor(homeViewModel.countryList[countryIndex].isFaved ? .black : .white)
+                    .foregroundColor(homeViewModel.countryList[getIndex()].isFaved ? .black : .white)
                     .scaledToFit()
             }
         }
