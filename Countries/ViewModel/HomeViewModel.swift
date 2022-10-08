@@ -30,14 +30,11 @@ class HomeViewModel: ObservableObject {
             } else {
                 do {
                     if let safeData = data {
-                        print(safeData.base64EncodedString())
                         let decodedData = try JSONDecoder().decode(CDetail.self, from: safeData)
-                        print(decodedData)
 
                         for index in self!.countryList.indices {
                             if self!.countryList[index].code.contains(code) {
                                 DispatchQueue.main.async {
-                                    print(decodedData.data.flagImageUri)
                                     self!.countryList[index].flagImageUri = decodedData.data.flagImageUri
                                 }
                             }
@@ -67,21 +64,23 @@ class HomeViewModel: ObservableObject {
 
         let dataTask = URLSession.shared.dataTask(with: request, completionHandler: { [weak self] data, _, error in
 
-            if error != nil {
-                print(error)
-            } else {
-                do {
-                    if let safeData = data {
-                        let decodedData = try JSONDecoder().decode(CountryListData.self, from: safeData)
-                        for country in decodedData.data {
-                            let countryDetail = CountryModel(code: country.code, flagImageUri: nil, name: country.name, wikiDataId: country.wikiDataID)
-                            DispatchQueue.main.async {
-                                self?.countryList.append(countryDetail)
+            if self!.countryList.isEmpty {
+                if error != nil {
+                    print(error)
+                } else {
+                    do {
+                        if let safeData = data {
+                            let decodedData = try JSONDecoder().decode(CountryListData.self, from: safeData)
+                            for country in decodedData.data {
+                                let countryDetail = CountryModel(code: country.code, flagImageUri: nil, name: country.name, wikiDataId: country.wikiDataID)
+                                DispatchQueue.main.async {
+                                    self?.countryList.append(countryDetail)
+                                }
                             }
                         }
+                    } catch {
+                        print(error)
                     }
-                } catch {
-                    print(error)
                 }
             }
 

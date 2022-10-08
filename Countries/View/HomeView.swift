@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct HomeView: View {
+    @StateObject var homeViewModel = HomeViewModel()
+
     init() {
         UITabBar.appearance().backgroundColor = UIColor.gray
         UITabBar.appearance().unselectedItemTintColor = UIColor.white
@@ -15,7 +17,7 @@ struct HomeView: View {
 
     var body: some View {
         TabView {
-            CountriesView()
+            CountriesView(homeViewModel: homeViewModel)
                 .tabItem {
                     Label {
                         Text("Home")
@@ -23,7 +25,11 @@ struct HomeView: View {
                         Image(systemName: "house.fill")
                     }
                 }
-            SavedCountriesView()
+                .onAppear {
+                    homeViewModel.getCountries()
+                }
+
+            SavedCountriesView(homeViewModel: homeViewModel)
                 .tabItem {
                     Label {
                         Text("Saved")
@@ -35,36 +41,50 @@ struct HomeView: View {
     }
 }
 
-struct SavedCountriesView: View {
-    var body: some View {
-        VStack {}
-    }
-}
-
 struct CountriesView: View {
-    @EnvironmentObject var homeViewModel: HomeViewModel
+    @ObservedObject var homeViewModel: HomeViewModel
 
     var body: some View {
         NavigationView {
             ScrollView {
                 VStack {
                     ForEach(homeViewModel.countryList, id: \.id) { country in
-                        NavigationLink(destination: CountryDetailView(countryModel: country)) {
-                            CountryBarView(country: country)
+                        NavigationLink(destination: CountryDetailView(countryModel: country, homeViewModel: homeViewModel)) {
+                            CountryBarView(country: country, homeViewModel: homeViewModel)
                         }
                     }
                 }
             }
             .navigationTitle("Countries")
         }
-        .onAppear {
-            homeViewModel.getCountries()
-        }
+    }
+}
+
+struct SavedCountriesView: View {
+    @ObservedObject var homeViewModel: HomeViewModel
+
+    var body: some View {
+        NavigationView {
+            ScrollView {
+                VStack {
+                    ForEach(homeViewModel.countryList, id: \.id) { country in
+                        if country.isFaved {
+                            NavigationLink(destination: CountryDetailView(countryModel: country, homeViewModel: homeViewModel)) {
+                                CountryBarView(country: country, homeViewModel: homeViewModel)
+                            }
+                        }
+                    }
+                    Spacer()
+                }
+            }
+        }.navigationTitle("Saved Countries")
     }
 }
 
 struct CountryBarView: View {
     @State var country: CountryModel
+    @ObservedObject var homeViewModel: HomeViewModel
+    @State var countryIndex: Int = 0
 
     var body: some View {
         HStack {
@@ -72,10 +92,13 @@ struct CountryBarView: View {
                 .foregroundColor(.white)
             Spacer()
             Button(action: {
-                country.isFaved = !country.isFaved
+                if let index = homeViewModel.countryList.firstIndex(where: { $0.id == country.id }) {
+                    homeViewModel.countryList[index].isFaved = !homeViewModel.countryList[index].isFaved
+                    countryIndex = index
+                }
             }) {
                 Image(systemName: "star.fill")
-                    .foregroundColor(country.isFaved ? .black : .white)
+                    .foregroundColor(homeViewModel.countryList[countryIndex].isFaved ? .black : .white)
                     .scaledToFit()
             }
         }

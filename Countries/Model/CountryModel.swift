@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct CountryModel {
+struct CountryModel: Equatable {
     let id = UUID()
     let code: String
     var flagImageUri: String?

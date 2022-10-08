@@ -2,11 +2,7 @@ import SwiftUI
 
 struct CountryDetailView: View {
     var countryModel: CountryModel
-    @EnvironmentObject var homeViewModel: HomeViewModel
-    
-    @Environment(\.manage)
-
-    @FetchRequest(sortDescriptors: []) var savedCountries: FetchedResults<CountryModel>
+    @ObservedObject var homeViewModel: HomeViewModel
 
     var body: some View {
         VStack(alignment: .leading) {
