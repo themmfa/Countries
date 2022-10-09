@@ -43,6 +43,8 @@ struct HomeView: View {
     }
 }
 
+/// The view which shows country list
+
 struct CountriesView: View {
     @ObservedObject var homeViewModel: HomeViewModel
 
@@ -61,6 +63,8 @@ struct CountriesView: View {
         }
     }
 }
+
+/// The view for saved countries tab
 
 struct SavedCountriesView: View {
     @ObservedObject var homeViewModel: HomeViewModel
@@ -84,6 +88,8 @@ struct SavedCountriesView: View {
     }
 }
 
+/// The view which represents country bar
+
 struct CountryBarView: View {
     var country: CountryModel
     @ObservedObject var homeViewModel: HomeViewModel
@@ -104,13 +110,13 @@ struct CountryBarView: View {
 
             }) {
                 Image(systemName: "star.fill")
-                    .foregroundColor(homeViewModel.countryList[getIndex()].isFaved ? .black : .white)
+                    .foregroundColor(homeViewModel.countryList[getIndex()].isFaved ? .black : .gray)
                     .scaledToFit()
             }
         }
         .padding()
 
-        .background(.gray)
+        .background(Color.teal)
         .cornerRadius(12)
         .overlay {
             RoundedRectangle(cornerRadius: 16)
